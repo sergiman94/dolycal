@@ -8,6 +8,7 @@ const SHEET_ID = '11viVDp1wJyCD2k4IVkNlG-zCQjR3fP4FkcCxEIH5VXk'
 export default function RemisionPreview({ formData }) {
   const previewRef = useRef(null)
   const [saving, setSaving] = useState(false)
+  const [sharing, setSharing] = useState(false)
   const [msg, setMsg] = useState('')
 
   const fmt = (val) => val || '—'
@@ -17,16 +18,44 @@ export default function RemisionPreview({ formData }) {
     return `${d}/${m}/${y}`
   }
 
-  const handleExportImage = async () => {
-    const canvas = await html2canvas(previewRef.current, { scale: 2, useCORS: true })
-    const link = document.createElement('a')
-    link.download = `remision-${formData.numeroRemision || 'sin-numero'}.png`
-    link.href = canvas.toDataURL('image/png')
-    link.click()
+  const hasFirma = formData.firmaDespachador?.startsWith('data:image')
+
+  const buildCanvas = () =>
+    html2canvas(previewRef.current, { scale: 2, useCORS: true, allowTaint: true })
+
+  // ── Compartir imagen por WhatsApp ───────────────────────────────────────
+  const handleShareWA = async () => {
+    setSharing(true)
+    try {
+      const canvas = await buildCanvas()
+      const blob = await new Promise((res) => canvas.toBlob(res, 'image/png'))
+      const file = new File([blob], `remision-${formData.numeroRemision || 'sin-numero'}.png`, { type: 'image/png' })
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: `Remisión #${formData.numeroRemision}` })
+      } else {
+        // Fallback: descarga la imagen y abre WhatsApp Web
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = file.name
+        a.click()
+        URL.revokeObjectURL(url)
+        const texto = encodeURIComponent(
+          `Remisión #${formData.numeroRemision} — ${fmtFecha(formData.fecha)}\nDestino: ${formData.destino}\nPeso: ${formData.pesoToneladas} Ton\nPlaca: ${formData.placaVolqueta}`
+        )
+        window.open(`https://wa.me/?text=${texto}`, '_blank')
+      }
+    } catch (err) {
+      if (err.name !== 'AbortError') setMsg(`❌ Error al compartir: ${err.message}`)
+    } finally {
+      setSharing(false)
+    }
   }
 
+  // ── Exportar PDF ────────────────────────────────────────────────────────
   const handleExportPDF = async () => {
-    const canvas = await html2canvas(previewRef.current, { scale: 2, useCORS: true })
+    const canvas = await buildCanvas()
     const imgData = canvas.toDataURL('image/png')
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a5' })
     const pdfW = pdf.internal.pageSize.getWidth()
@@ -35,6 +64,7 @@ export default function RemisionPreview({ formData }) {
     pdf.save(`remision-${formData.numeroRemision || 'sin-numero'}.pdf`)
   }
 
+  // ── Guardar en Google Sheets ────────────────────────────────────────────
   const handleSaveSheet = async () => {
     if (!APPS_SCRIPT_URL) {
       setMsg('⚠️ Configura VITE_APPS_SCRIPT_URL en el archivo .env')
@@ -55,16 +85,13 @@ export default function RemisionPreview({ formData }) {
           formData.placaVolqueta,
           formData.nombreConductor,
           formData.firmaBeneficiario,
-          formData.firmaDespachador,
+          hasFirma ? '✔ Firmado' : formData.firmaDespachador,
         ],
       }
       const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
       const json = await res.json()
-      if (json.status === 'ok') {
-        setMsg('✅ Guardado en Google Sheets correctamente.')
-      } else {
-        setMsg(`❌ Error: ${json.message || 'respuesta inesperada'}`)
-      }
+      if (json.status === 'ok') setMsg('✅ Guardado en Google Sheets correctamente.')
+      else setMsg(`❌ Error: ${json.message || 'respuesta inesperada'}`)
     } catch (err) {
       setMsg(`❌ Error de red: ${err.message}`)
     } finally {
@@ -126,17 +153,25 @@ export default function RemisionPreview({ formData }) {
             <div className="ticket-sig-label">Beneficiario / Recibe</div>
           </div>
           <div className="ticket-sig-box">
-            <div className="ticket-sig-name">{fmt(formData.firmaDespachador)}</div>
+            {hasFirma ? (
+              <img src={formData.firmaDespachador} alt="firma despachador" className="ticket-sig-img" />
+            ) : (
+              <div className="ticket-sig-name">{fmt(formData.firmaDespachador)}</div>
+            )}
             <div className="ticket-sig-line" />
             <div className="ticket-sig-label">Despachador</div>
           </div>
         </div>
+
+        {hasFirma && (
+          <div className="ticket-despachado-badge">DESPACHADO</div>
+        )}
       </div>
 
-      {/* ── Action buttons — sticky on mobile ── */}
+      {/* ── Action buttons ── */}
       <div className="action-buttons">
-        <button className="btn btn-export" onClick={handleExportImage}>
-          Imagen
+        <button className="btn btn-wa" onClick={handleShareWA} disabled={sharing}>
+          {sharing ? 'Compartiendo…' : '📲 WhatsApp'}
         </button>
         <button className="btn btn-export" onClick={handleExportPDF}>
           PDF

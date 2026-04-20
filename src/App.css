@@ -21,18 +21,44 @@ body {
   .app-container { padding: 24px 20px 24px; }
 }
 
+/* ── App header row ── */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 12px;
+}
+
 .app-title {
   font-size: 1.4rem;
   font-weight: 700;
   color: #1a1a2e;
-  margin-bottom: 14px;
-  text-align: center;
   letter-spacing: 0.5px;
+  margin: 0;
 }
 
 @media (min-width: 820px) {
-  .app-title { font-size: 1.6rem; margin-bottom: 24px; }
+  .app-title { font-size: 1.6rem; }
+  .app-header { margin-bottom: 24px; }
 }
+
+.btn-historial {
+  padding: 9px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #fff;
+  color: #2d4a8a;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 6px rgba(0,0,0,.1);
+  white-space: nowrap;
+  min-height: 40px;
+  touch-action: manipulation;
+}
+
+.btn-historial:hover { background: #f0f4ff; }
 
 /* ── Tab bar (mobile only) ── */
 .tab-bar {
@@ -198,6 +224,15 @@ body {
   .btn-preview-mobile { display: none; }
   .btn-secondary { flex: none; width: 100%; }
 }
+
+.btn-wa {
+  background: #25d366;
+  color: #fff;
+  flex: 1;
+}
+
+.btn-wa:hover { background: #1ebe5a; }
+.btn-wa:disabled { background: #8ae6b0; cursor: not-allowed; }
 
 .btn-export {
   background: #2d4a8a;
@@ -373,4 +408,298 @@ body {
   color: #777;
   text-transform: uppercase;
   letter-spacing: 0.4px;
+}
+
+.ticket-sig-img {
+  width: 90%;
+  max-height: 56px;
+  object-fit: contain;
+  margin-bottom: 4px;
+}
+
+/* ── Badge DESPACHADO en el ticket ── */
+.ticket-despachado-badge {
+  margin-top: 14px;
+  text-align: center;
+  background: #1a8a5a;
+  color: #fff;
+  font-weight: 900;
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  padding: 5px 0;
+  border-radius: 6px;
+}
+
+/* ── Badge DESPACHADO inline ── */
+.badge-despachado {
+  display: inline-block;
+  background: #1a8a5a;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+/* ── Campo N° Remisión solo-lectura ── */
+.field-readonly {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  border: 1.5px solid #d0d7e8;
+  border-radius: 8px;
+  background: #f0f4ff;
+  min-height: 44px;
+}
+
+.field-num {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #2d4a8a;
+  flex: 1;
+}
+
+.field-loading {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.field-readonly-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #2d4a8a;
+  background: #dce6ff;
+  padding: 2px 7px;
+  border-radius: 10px;
+  letter-spacing: 0.5px;
+}
+
+/* ── Firma del despachador en el formulario ── */
+.btn-firma {
+  background: #f0f4ff;
+  color: #2d4a8a;
+  border: 1.5px dashed #2d4a8a;
+  width: 100%;
+  font-size: 1rem;
+  min-height: 48px;
+}
+
+.btn-firma:hover { background: #dce6ff; }
+
+.firma-preview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  border: 1.5px solid #d0d7e8;
+  border-radius: 8px;
+  background: #fafbfd;
+}
+
+.firma-preview-img {
+  max-height: 72px;
+  object-fit: contain;
+  border-bottom: 1px solid #e0e4ef;
+  padding-bottom: 8px;
+}
+
+.firma-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  min-height: 32px;
+}
+
+/* ── Signature Pad modal ── */
+.sigpad-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 16px;
+}
+
+.sigpad-modal {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+}
+
+.sigpad-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1a1a2e;
+  margin-bottom: 14px;
+}
+
+.sigpad-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #888;
+  padding: 4px 8px;
+}
+
+.sigpad-canvas {
+  display: block;
+  width: 100%;
+  height: 160px;
+  border: 1.5px solid #d0d7e8;
+  border-radius: 8px;
+  background: #fafbfd;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.sigpad-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.sigpad-actions .btn { flex: 1; }
+
+/* ── Historial modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 200;
+}
+
+@media (min-width: 600px) {
+  .modal-overlay { align-items: center; padding: 24px; }
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  padding: 20px 16px;
+  width: 100%;
+  max-width: 540px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 -4px 32px rgba(0,0,0,.15);
+}
+
+@media (min-width: 600px) {
+  .modal-box { border-radius: 16px; max-height: 75vh; }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1a1a2e;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e8ecf4;
+}
+
+.modal-status {
+  font-size: 0.9rem;
+  color: #666;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.modal-status--err { color: #8b1a1a; }
+
+/* ── Timeline ── */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  padding-left: 8px;
+}
+
+.tl-item {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  grid-template-rows: auto 1fr;
+  column-gap: 12px;
+}
+
+.tl-dot {
+  grid-row: 1;
+  grid-column: 1;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #2d4a8a;
+  margin-top: 4px;
+  justify-self: center;
+}
+
+.tl-line {
+  grid-row: 2;
+  grid-column: 1;
+  width: 2px;
+  background: #d0d7e8;
+  justify-self: center;
+  min-height: 16px;
+}
+
+.tl-card {
+  grid-row: 1 / 3;
+  grid-column: 2;
+  background: #f8faff;
+  border: 1px solid #e0e8f5;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.tl-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.tl-num {
+  font-weight: 900;
+  font-size: 1rem;
+  color: #2d4a8a;
+}
+
+.tl-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  padding: 3px 0;
+  color: #444;
+  gap: 8px;
+}
+
+.tl-row span:first-child {
+  color: #888;
+  flex-shrink: 0;
+}
+
+.tl-row span:last-child {
+  font-weight: 600;
+  text-align: right;
+  word-break: break-word;
 }
