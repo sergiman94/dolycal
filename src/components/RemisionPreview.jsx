@@ -2,10 +2,7 @@ import { useRef, useState } from 'react'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 
-// ── Google Apps Script Web App URL ──────────────────────────────────────────
-// Reemplaza esto con la URL del Apps Script desplegado (ver README)
 const APPS_SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_URL || ''
-
 const SHEET_ID = '11viVDp1wJyCD2k4IVkNlG-zCQjR3fP4FkcCxEIH5VXk'
 
 export default function RemisionPreview({ formData }) {
@@ -20,7 +17,6 @@ export default function RemisionPreview({ formData }) {
     return `${d}/${m}/${y}`
   }
 
-  // ── Exportar como imagen ─────────────────────────────────────────────────
   const handleExportImage = async () => {
     const canvas = await html2canvas(previewRef.current, { scale: 2, useCORS: true })
     const link = document.createElement('a')
@@ -29,7 +25,6 @@ export default function RemisionPreview({ formData }) {
     link.click()
   }
 
-  // ── Exportar como PDF ────────────────────────────────────────────────────
   const handleExportPDF = async () => {
     const canvas = await html2canvas(previewRef.current, { scale: 2, useCORS: true })
     const imgData = canvas.toDataURL('image/png')
@@ -40,7 +35,6 @@ export default function RemisionPreview({ formData }) {
     pdf.save(`remision-${formData.numeroRemision || 'sin-numero'}.pdf`)
   }
 
-  // ── Guardar en Google Sheets vía Apps Script ─────────────────────────────
   const handleSaveSheet = async () => {
     if (!APPS_SCRIPT_URL) {
       setMsg('⚠️ Configura VITE_APPS_SCRIPT_URL en el archivo .env')
@@ -64,10 +58,7 @@ export default function RemisionPreview({ formData }) {
           formData.firmaDespachador,
         ],
       }
-      const res = await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify(payload),
-      })
+      const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
       const json = await res.json()
       if (json.status === 'ok') {
         setMsg('✅ Guardado en Google Sheets correctamente.')
@@ -83,7 +74,7 @@ export default function RemisionPreview({ formData }) {
 
   return (
     <div className="preview-column">
-      {/* ── Vista previa de la remisión ── */}
+      {/* ── Ticket ── */}
       <div ref={previewRef} className="remision-ticket">
         <div className="ticket-header">
           <div className="ticket-title">REMISIÓN DE MATERIAL</div>
@@ -142,16 +133,16 @@ export default function RemisionPreview({ formData }) {
         </div>
       </div>
 
-      {/* ── Botones de acción ── */}
+      {/* ── Action buttons — sticky on mobile ── */}
       <div className="action-buttons">
         <button className="btn btn-export" onClick={handleExportImage}>
-          Exportar Imagen
+          Imagen
         </button>
         <button className="btn btn-export" onClick={handleExportPDF}>
-          Exportar PDF
+          PDF
         </button>
         <button className="btn btn-save" onClick={handleSaveSheet} disabled={saving}>
-          {saving ? 'Guardando…' : 'Guardar en Google Sheets'}
+          {saving ? 'Guardando…' : 'Guardar en Sheets'}
         </button>
       </div>
 
