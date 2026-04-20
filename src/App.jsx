@@ -13,6 +13,7 @@ const EMPTY_FORM = {
   placaVolqueta: '',
   nombreConductor: '',
   firmaBeneficiario: '',
+  nombreDespachador: '',
   firmaDespachador: '',
 }
 

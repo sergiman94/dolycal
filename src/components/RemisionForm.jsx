@@ -76,6 +76,19 @@ export default function RemisionForm({ formData, setFormData, emptyForm, onPrevi
         </div>
       ))}
 
+      {/* Nombre del despachador */}
+      <div className="field">
+        <label htmlFor="nombreDespachador">Nombre del Despachador</label>
+        <input
+          id="nombreDespachador"
+          type="text"
+          placeholder="Nombre completo"
+          autoCapitalize="words"
+          value={formData.nombreDespachador}
+          onChange={handleChange}
+        />
+      </div>
+
       {/* Firma del despachador */}
       <div className="field">
         <label>Firma del Despachador</label>

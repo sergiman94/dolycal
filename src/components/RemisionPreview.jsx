@@ -85,7 +85,8 @@ export default function RemisionPreview({ formData }) {
           formData.placaVolqueta,
           formData.nombreConductor,
           formData.firmaBeneficiario,
-          hasFirma ? '✔ Firmado' : formData.firmaDespachador,
+          formData.nombreDespachador,
+          hasFirma ? '✔ Firmado' : '',
         ],
       }
       const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
@@ -153,11 +154,10 @@ export default function RemisionPreview({ formData }) {
             <div className="ticket-sig-label">Beneficiario / Recibe</div>
           </div>
           <div className="ticket-sig-box">
-            {hasFirma ? (
+            {hasFirma && (
               <img src={formData.firmaDespachador} alt="firma despachador" className="ticket-sig-img" />
-            ) : (
-              <div className="ticket-sig-name">{fmt(formData.firmaDespachador)}</div>
             )}
+            <div className="ticket-sig-name">{fmt(formData.nombreDespachador)}</div>
             <div className="ticket-sig-line" />
             <div className="ticket-sig-label">Despachador</div>
           </div>

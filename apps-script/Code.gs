@@ -4,7 +4,7 @@
 // Copia la URL y pégala en .env como VITE_APPS_SCRIPT_URL
 
 const SHEET_ID = '11viVDp1wJyCD2k4IVkNlG-zCQjR3fP4FkcCxEIH5VXk';
-const HEADERS  = ['N° Remisión','Fecha','Destino','Clase Material','Peso (Ton)','Placa','Conductor','Beneficiario','Despachador'];
+const HEADERS  = ['N° Remisión','Fecha','Destino','Clase Material','Peso (Ton)','Placa','Conductor','Beneficiario','Nombre Despachador','Firma'];
 
 // ── GET: lastNumber o history ────────────────────────────────────────────────
 function doGet(e) {
